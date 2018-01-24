@@ -42,13 +42,18 @@ console.log("Hello");
 });
 
 
-
-
 app.post("/urls", (req, res) => {
   console.log(req.body);  // debug statement to see POST parameters
   let randomString = generator();
   urlDatabase[randomString] = req.body.longURL;
   res.redirect("/urls/" + randomString);
+});
+
+
+app.get("/u/:shortURL", (req, res) => {
+  console.log(urlDatabase[req.params.shortURL]);
+  let longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
 });
 
 
