@@ -30,14 +30,11 @@ app.get("/urls/new", (req, res) => {
 
 //--- Feeds URL to URL_show selection page. ---
 app.get("/urls/:id", (req, res) => {
-console.log("Hello");
-//--- This second ... ---
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id]
   };
 
-//--- This first... ---
   res.render("urls_show", templateVars);
 });
 
@@ -49,7 +46,7 @@ app.post("/urls", (req, res) => {
   res.redirect("/urls/" + randomString);
 });
 
-
+//--- Redirects short URLs to full URLs ---
 app.get("/u/:shortURL", (req, res) => {
   console.log(urlDatabase[req.params.shortURL]);
   let longURL = urlDatabase[req.params.shortURL];

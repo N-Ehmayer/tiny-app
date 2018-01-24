@@ -10,9 +10,14 @@
 </header>
   <ul>
   <% for (shortUrl in urls) { %>
-    <li><%= urls[shortUrl] %>    :    <%= shortUrl %></li>
+    <li>
+      <%= urls[shortUrl] %> --- <%= shortUrl %> \n
+      <form method="POST" action="/urls/shortUrl/delete">
+        <a href="">Remove</a>
+      </form>
+    </li>
   <% } %>
   </ul>
-  <a href="/">URL Shortener</a>
+  <a href="">URL Shortener</a>
 </body>
 </html>
