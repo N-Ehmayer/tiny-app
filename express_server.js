@@ -11,20 +11,26 @@ var urlDatabase = {
 
 app.get("/", (req, res) => {
   res.end("Hello!");
+
 });
 
+//--- Feeds URLS from database to main index page. ---
 app.get("/urls", (req, res) => {
   let templateVars = {urls: urlDatabase};
+
   res.render("urls_index", templateVars);
 });
 
-//Current
-
+//--- Feeds URL to URL_show selection page. ---
 app.get("/urls/:id", (req, res) => {
+
+//--- This second ... ---
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id]
   };
+
+//--- This first... ---
   res.render("urls_show", templateVars);
 });
 
