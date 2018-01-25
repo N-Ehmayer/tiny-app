@@ -29,6 +29,16 @@ const users = {
 }
 
 
+function isNameMatch(userName, userListOdject) {
+  for (let key in userListOdject) {
+    if (userListOdject[key].email === userName) {
+      return true;
+    }
+  }
+  return false;
+}
+
+
 
 app.get("/", (req, res) => {
   res.end("Hello!");
@@ -58,18 +68,19 @@ app.post("/register", (req, res) => {
   users[randomId].id = randomId;
   users[randomId].email = req.body.email;
   users[randomId].password = req.body.password;
+
   res.cookie("userData", users[randomId]);
-  console.log(users);
+
 
   res.redirect("/urls");
-})
+});
 
 //--- Feeds URLS from database to main index page. ---
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies.username,
-    userdata: req.cookies.userData
+    username: req.cookies.username, // Maybe remove??
+    userData: req.cookies.userData
   };
 
   res.render("urls_index", templateVars);
@@ -78,7 +89,7 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-    username: req.cookies.username
+    username: req.cookies.username // Maybe remove?
   };
 
   res.render("urls_new", templateVars);
@@ -90,7 +101,8 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id],
-    username: req.cookies.username
+    username: req.cookies.username, // Maybe remove??
+    userData: req.cookies.userData
   };
 
   res.render("urls_show", templateVars);
