@@ -24,16 +24,23 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+
+
+
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
 //--- Feeds URL to URL_show selection page. ---
+
+
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
-    shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id]
+    shortURL: req.params.shortURL,
+    longURL: urlDatabase[req.params.shortURL]
   };
+
+
 
   res.render("urls_show", templateVars);
 });
@@ -44,6 +51,15 @@ app.post("/urls", (req, res) => {
   let randomString = generator();
   urlDatabase[randomString] = req.body.longURL;
   res.redirect("/urls/" + randomString);
+});
+
+app.post("/urls/:id/delete", (req, res) => {
+  console.log(req.params.id);
+  let target = req.params.id;
+  delete urlDatabase[target];
+  console.log(urlDatabase);
+
+  res.redirect("/urls");
 });
 
 //--- Redirects short URLs to full URLs ---
