@@ -28,6 +28,12 @@ app.post("/login", (req, res) => {
   res.redirect("/urls");
 });
 
+app.post("/logout", (req, res) => {
+  res.clearCookie("username");
+
+  res.redirect("/urls");
+});
+
 //--- Feeds URLS from database to main index page. ---
 app.get("/urls", (req, res) => {
   let templateVars = {
