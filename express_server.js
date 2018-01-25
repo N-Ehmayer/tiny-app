@@ -12,10 +12,13 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+
+
 app.get("/", (req, res) => {
   res.end("Hello!");
 
 });
+
 
 //--- Feeds URLS from database to main index page. ---
 app.get("/urls", (req, res) => {
@@ -25,25 +28,30 @@ app.get("/urls", (req, res) => {
 });
 
 
-
-
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+
 //--- Feeds URL to URL_show selection page. ---
-
-
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
-    shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL]
+    shortURL: req.params.id,
+    longURL: urlDatabase[req.params.id]
   };
-
-
 
   res.render("urls_show", templateVars);
 });
+
+
+app.post("/urls/:id", (req, res) => {
+  console.log(req.body);
+  console.log(req.params);
+  urlDatabase[req.params.id] = req.body.longURL;
+
+  res.redirect("/urls");
+});
+
 
 
 app.post("/urls", (req, res) => {
@@ -53,26 +61,21 @@ app.post("/urls", (req, res) => {
   res.redirect("/urls/" + randomString);
 });
 
+
 app.post("/urls/:id/delete", (req, res) => {
-  console.log(req.params.id);
-  let target = req.params.id;
-  delete urlDatabase[target];
-  console.log(urlDatabase);
+  delete urlDatabase[req.params.id];
 
   res.redirect("/urls");
 });
 
+
 //--- Redirects short URLs to full URLs ---
 app.get("/u/:shortURL", (req, res) => {
-  console.log(urlDatabase[req.params.shortURL]);
   let longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
 });
 
 
-app.get("/hello", (req, res) => {
-  res.end("<html><body>Hello <b>World</b></body></html>\n");
-});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
