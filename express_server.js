@@ -52,11 +52,24 @@ app.get("/register", (req, res) => {
 res.render("register");
 });
 
+app.post("/register", (req, res) => {
+  let randomId = generator();
+  users[randomId] = {};
+  users[randomId].id = randomId;
+  users[randomId].email = req.body.email;
+  users[randomId].password = req.body.password;
+  res.cookie("userData", users[randomId]);
+  console.log(users);
+
+  res.redirect("/urls");
+})
+
 //--- Feeds URLS from database to main index page. ---
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies.username
+    username: req.cookies.username,
+    userdata: req.cookies.userData
   };
 
   res.render("urls_index", templateVars);
