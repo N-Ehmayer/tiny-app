@@ -9,14 +9,14 @@
   <% include partials/_header %>
 </header>
   <ul>
-  <% for (shortUrl in urls) { %>
+  <% for (key in urls) { %>
     <li>
-      <a href="/u/<%= shortUrl %>"><%= urls[shortUrl] %></a> ---
-      <%= shortUrl %>
-      <form method="GET" action='urls/<%= shortUrl %>'>
+      <a href="/u/<%= urls[key].url %>"><%= urls[key].url %></a> ---
+      <%= key %>
+      <form method="GET" action='urls/<%= key %>'>
         <input type="submit" value="Edit">
       </form>
-      <form method="POST" action='urls/<%= shortUrl %>/delete'>
+      <form method="POST" action='urls/<%= key %>/delete'>
         <input type="submit" value="Delete">
       </form>
       <h4>-------------------------------------------------------</h4>
@@ -24,13 +24,13 @@
   <% } %>
   </ul>
   <% if (userData) { %>
-  <form method="GET" action="urls/new">
+    <form method="GET" action="urls/new">
     <input type="submit" value="New URL">
   </form>
   <% } else { %>
-  <form method="GET" action="/login">
+    <form method="GET" action="/login">
     <input type="submit" value="New URL">
-  </form>
+    </form>
   <% } %>
 </body>
 </html>
