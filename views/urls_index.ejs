@@ -23,6 +23,14 @@
     </li>
   <% } %>
   </ul>
-  <a href="">URL Shortener</a>
+  <% if (userData) { %>
+  <form method="GET" action="urls/new">
+    <input type="submit" value="New URL">
+  </form>
+  <% } else { %>
+  <form method="GET" action="/login">
+    <input type="submit" value="New URL">
+  </form>
+  <% } %>
 </body>
 </html>
