@@ -68,18 +68,22 @@ app.post("/register", (req, res) => {
   users[randomId].id = randomId;
   users[randomId].email = req.body.email;
   users[randomId].password = req.body.password;
-
+  // if (isNameMatch(req.body.email, users)) {    // Fix these error throws..
+  //   throw err;
+  // } else if (req.body.email) {
+  //   throw err
+  // } else {
   res.cookie("userData", users[randomId]);
-
-
   res.redirect("/urls");
+  //}
+
+
 });
 
 //--- Feeds URLS from database to main index page. ---
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies.username, // Maybe remove??
     userData: req.cookies.userData
   };
 
@@ -89,7 +93,7 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-    username: req.cookies.username // Maybe remove?
+    userData: req.cookies.userData
   };
 
   res.render("urls_new", templateVars);
@@ -101,7 +105,6 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id],
-    username: req.cookies.username, // Maybe remove??
     userData: req.cookies.userData
   };
 

@@ -2,14 +2,13 @@
 <html>
 <body>
   <h1>Tiny - App</h1>
-  <% if (username) { %>
-    <h5>User: <%= username %></h5>
+  <% if (userData) { %>
+    <h5>User: <%= userData.email %></h5>
     <form method="POST" action="/logout">
       <input type="submit" value="Sign-out">
     </form>
   <% } else { %>
-    <form method="POST" action="/login">
-      <input type="text" name="username" placeholder="Username">
+    <form method="GET" action="/login">
       <input type="submit" value="Sign-in">
     </form>
   <% } %>
