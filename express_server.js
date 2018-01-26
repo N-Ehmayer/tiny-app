@@ -29,15 +29,22 @@ const users = {
 }
 
 
-function isNameMatch(userName, userListOdject) {
+function isMatch(userEntry, userListOdject, infoType) {
   for (let key in userListOdject) {
-    if (userListOdject[key].email === userName) {
+    if (userListOdject[key][infoType] === userEntry) {
       return true;
     }
   }
   return false;
 }
 
+function getUserId(email) {
+  for (let key in users) {
+    if (users[key].email === email) {
+      return users[key].id;
+    }
+  }
+}
 
 
 app.get("/", (req, res) => {
@@ -50,9 +57,15 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username);
+  let id = getUserId(req.body.email);
+  if (isMatch(req.body.email, users, "email") && isMatch(req.body.password, users, "password")) {
+    res.cookie("userData", users[id]);
+    res.redirect("/urls");
+  } else {
+    res.status(403);
+    res.redirect("/login");
+  }
 
-  res.redirect("/urls");
 });
 
 app.post("/logout", (req, res) => {
