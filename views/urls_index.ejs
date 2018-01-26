@@ -13,14 +13,16 @@
     <li>
       <a href="/u/<%= urls[key].url %>"><%= urls[key].url %></a> ---
       <%= key %>
+      <% if (urls[key].userID === userData.id) { %>
       <form method="GET" action='urls/<%= key %>'>
         <input type="submit" value="Edit">
       </form>
       <form method="POST" action='urls/<%= key %>/delete'>
         <input type="submit" value="Delete">
       </form>
-      <h4>-------------------------------------------------------</h4>
     </li>
+    <% } %>
+    <h4>-------------------------------------------------------</h4>
   <% } %>
   </ul>
   <% if (userData) { %>
@@ -32,5 +34,6 @@
     <input type="submit" value="New URL">
     </form>
   <% } %>
+  <%= userData.toString() %>
 </body>
 </html>

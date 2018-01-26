@@ -105,10 +105,13 @@ app.post("/register", (req, res) => {
 
 //--- Feeds URLS from database to main index page. ---
 app.get("/urls", (req, res) => {
+
+
   let templateVars = {
     urls: urlDatabase,
     userData: req.cookies.userData
   };
+  console.log(templateVars);
 
   res.render("urls_index", templateVars);
 });
@@ -147,10 +150,11 @@ app.post("/urls/:id", (req, res) => {
 
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // debug statement to see POST parameters
+  console.log(req.cookies.userData.id);  // debug statement to see POST parameters
   let randomString = generator();
   urlDatabase[randomString] = {};
   urlDatabase[randomString].url = req.body.longURL;
+  urlDatabase[randomString].userID = req.cookies.userData.id;
 
   res.redirect("/urls"); //res.redirect("/urls/" + randomString);
 });
