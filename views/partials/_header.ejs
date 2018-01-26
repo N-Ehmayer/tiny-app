@@ -5,11 +5,14 @@
   <% if (userData) { %>
     <h5>User: <%= userData.email %></h5>
     <form method="POST" action="/logout">
-      <input type="submit" value="Sign-out">
+      <input type="submit" value="Logout">
     </form>
   <% } else { %>
     <form method="GET" action="/login">
-      <input type="submit" value="Sign-in">
+      <input type="submit" value="Login">
+    </form>
+    <form method="GET" action="/register">
+      <input type="submit" value="Register">
     </form>
   <% } %>
 </body>
