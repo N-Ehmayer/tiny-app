@@ -12,7 +12,7 @@
   <% if (userData) { %>
     <% for (key in urls) { %>
       <li>
-        <a href="/u/<%= urls[key].url %>"><%= urls[key].url %></a> ---
+        <a href="/u/<%= key %>"><%= urls[key].url %></a> ---
         <%= key %>
         <% if (userData && urls[key].userID === userData.id) { %>
         <form method="GET" action='urls/<%= key %>'>

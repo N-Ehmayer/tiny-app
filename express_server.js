@@ -115,7 +115,6 @@ app.post("/register", (req, res) => {
 
 //--- Feeds URLS from database to main index page. ---
 app.get("/urls", (req, res) => {
-
   if(req.cookies.userData) {
     let templateVars = {
       urls: urlsForUser(req.cookies.userData.id),
@@ -153,15 +152,12 @@ app.get("/urls/:id", (req, res) => {
     longURL: urlDatabase[req.params.id].url,
     userData: req.cookies.userData
   };
-  console.log(req.params.id);
 
   res.render("urls_show", templateVars);
 });
 
 
 app.post("/urls/:id", (req, res) => {
-  console.log(req.body);
-  console.log(urlDatabase[req.params.id].url);
   urlDatabase[req.params.id].url = req.body.longURL;
 
   res.redirect("/urls");
@@ -170,7 +166,6 @@ app.post("/urls/:id", (req, res) => {
 
 
 app.post("/urls", (req, res) => {
-  console.log(req.cookies.userData.id);  // debug statement to see POST parameters
   let randomString = generator();
   urlDatabase[randomString] = {};
   urlDatabase[randomString].url = req.body.longURL;
@@ -189,7 +184,10 @@ app.post("/urls/:id/delete", (req, res) => {
 
 //--- Redirects short URLs to full URLs ---
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL];
+  console.log("got correct route")
+  console.log(urlDatabase);
+  console.log(req.params);
+  let longURL = urlDatabase[req.params.shortURL].url;
   res.redirect(longURL);
 
 });
