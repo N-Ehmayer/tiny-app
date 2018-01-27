@@ -9,22 +9,26 @@
   <% include partials/_header %>
 </header>
   <ul>
-  <% for (key in urls) { %>
-    <li>
-      <a href="/u/<%= urls[key].url %>"><%= urls[key].url %></a> ---
-      <%= key %>
-      <% if (urls[key].userID === userData.id) { %>
-      <form method="GET" action='urls/<%= key %>'>
-        <input type="submit" value="Edit">
-      </form>
-      <form method="POST" action='urls/<%= key %>/delete'>
-        <input type="submit" value="Delete">
-      </form>
-    </li>
+  <% if (userData) { %>
+    <% for (key in urls) { %>
+      <li>
+        <a href="/u/<%= urls[key].url %>"><%= urls[key].url %></a> ---
+        <%= key %>
+        <% if (userData && urls[key].userID === userData.id) { %>
+        <form method="GET" action='urls/<%= key %>'>
+          <input type="submit" value="Edit">
+        </form>
+        <form method="POST" action='urls/<%= key %>/delete'>
+          <input type="submit" value="Delete">
+        </form>
+      </li>
+      <% } %>
+      <h4>-------------------------------------------------------</h4>
     <% } %>
-    <h4>-------------------------------------------------------</h4>
+    </ul>
+  <% } else { %>
+    <h1>Please register or login!</h1>
   <% } %>
-  </ul>
   <% if (userData) { %>
     <form method="GET" action="urls/new">
     <input type="submit" value="New URL">
@@ -34,6 +38,5 @@
     <input type="submit" value="New URL">
     </form>
   <% } %>
-  <%= userData.toString() %>
-</body>
+  </body>
 </html>

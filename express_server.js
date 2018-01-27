@@ -34,6 +34,16 @@ const users = {
   }
 }
 
+function urlsForUser(id) {
+  const matchList = {};
+  for (let key in urlDatabase) {
+    if (urlDatabase[key].userID === id) {
+      matchList[key] = urlDatabase[key];
+    }
+  }
+  return matchList;
+}
+
 
 function isMatch(userEntry, userListOdject, infoType) {
   for (let key in userListOdject) {
@@ -106,14 +116,24 @@ app.post("/register", (req, res) => {
 //--- Feeds URLS from database to main index page. ---
 app.get("/urls", (req, res) => {
 
-
-  let templateVars = {
-    urls: urlDatabase,
-    userData: req.cookies.userData
-  };
-  console.log(templateVars);
-
+  if(req.cookies.userData) {
+    let templateVars = {
+      urls: urlsForUser(req.cookies.userData.id),
+      userUrls: urlsForUser(req.cookies.userData.id),
+      userData: req.cookies.userData
+    }
+    res.render("urls_index", templateVars);
+  }
+  else {
+    let templateVars = {
+      urls: urlDatabase.userID,
+      userData: false
+    }
   res.render("urls_index", templateVars);
+
+
+  }
+
 });
 
 
