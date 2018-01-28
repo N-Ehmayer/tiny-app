@@ -106,21 +106,19 @@ app.post("/logout", (req, res) => {
   res.redirect("/urls");
 });
 
+
 app.get("/register", (req, res) => {
 
-res.render("register");
+  res.render("register");
 });
 
 //--- Adds new user info to database---
 app.post("/register", (req, res) => {
-
-  if (isMatch(req.body.email, users, "email")) {    // Fix these error throws..
+  if (isMatch(req.body.email, users, "email")) {
     res.status(409);
-    console.log("block 1");
     res.redirect("/register");
   } else if (req.body.email === "") {
     res.status(200);
-    console.log("block 2");
     res.redirect("/register");
   } else {
     let randomId = generator();
