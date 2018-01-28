@@ -160,12 +160,14 @@ app.get("/urls", (req, res) => {
 
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = {
-    userData: req.session.user_id
-    //userData: req.cookies.userData
-  };
-
-  res.render("urls_new", templateVars);
+  if (req.session.user_id) {
+    let templateVars = {
+      userData: req.session.user_id
+    };
+    res.render("urls_new", templateVars);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 
