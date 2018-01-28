@@ -16,7 +16,7 @@
         <%= key %>
         <% if (userData && urls[key].userID === userData.id) { %>
         <form method="GET" action='urls/<%= key %>'>
-          <input type="submit" value="Edit">
+          <input type="submit" value="Edit / Show">
         </form>
         <form method="POST" action='urls/<%= key %>/delete'>
           <input type="submit" value="Delete">
@@ -27,7 +27,7 @@
     <% } %>
     </ul>
   <% } else { %>
-    <h1><a href="/register">Sign-up to Start Creating Short URLs!</h1>
+    <h1><a href="/register">Signup to Start Creating Tiny URLs!</h1>
   <% } %>
   <% if (userData) { %>
     <form method="GET" action="urls/new">

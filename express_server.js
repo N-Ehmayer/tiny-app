@@ -196,9 +196,8 @@ app.post("/urls", (req, res) => {
   urlDatabase[randomString] = {};
   urlDatabase[randomString].url = req.body.longURL;
   urlDatabase[randomString].userID = req.session.user_id.id;
-  //urlDatabase[randomString].userID = req.cookies.userData.id;
 
-  res.redirect("/urls"); //res.redirect("/urls/" + randomString);
+  res.redirect("/urls");
 });
 
 
