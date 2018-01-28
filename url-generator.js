@@ -6,4 +6,3 @@ module.exports = function generateRandomString() {
   return firstPart + secondPart;
 }
 
-//console.log(generateRandomString());

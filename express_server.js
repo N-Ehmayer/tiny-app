@@ -19,6 +19,8 @@ app.use(cookieSession({
 }))
 
 
+//--- Mock databases ---
+
 var urlDatabase = {
   "b2xVn2": {
     url: "http://www.lighthouselabs.ca",
@@ -44,6 +46,8 @@ const users = {
 }
 
 
+//--- Utility Functions ---
+
 function urlsForUser(id) {
   const matchList = {};
   for (let key in urlDatabase) {
@@ -63,8 +67,6 @@ function isMatch(userEntry, userListOdject, infoType) {
   return false;
 }
 
-console.log(isMatch("nic.ehmayer92@gmail.com", users, "email"));
-
 function getUserId(email) {
   for (let key in users) {
     if (users[key].email === email) {
@@ -74,17 +76,26 @@ function getUserId(email) {
 }
 
 
+//--- Start of routing ---
+
 app.get("/", (req, res) => {
   if (req.session.user_id) {
+
     res.redirect("/urls");
   } else {
+
     res.redirect("/login");
   }
 });
 
+
+
 app.get("/login", (req, res) => {
+
   res.render("login");
 });
+
+
 
 app.post("/login", (req, res) => {
   let id = getUserId(req.body.email);
@@ -92,13 +103,16 @@ app.post("/login", (req, res) => {
   //--- Checks for user matches in user database ---
   if (isMatch(req.body.email, users, "email") && bcrypt.compareSync(req.body.password, users[id].password))   {
     req.session.user_id = users[id];
+
     res.redirect("/urls");
   } else {
     res.status(403);
+
     res.redirect("/login");
   }
-
 });
+
+
 
 app.post("/logout", (req, res) => {
   req.session = null;
@@ -107,18 +121,25 @@ app.post("/logout", (req, res) => {
 });
 
 
+
 app.get("/register", (req, res) => {
+  if (req.session.user_id) {
+    res.redirect("/urls");
+  }
 
   res.render("register");
 });
+
 
 //--- Adds new user info to database---
 app.post("/register", (req, res) => {
   if (isMatch(req.body.email, users, "email")) {
     res.status(409);
+
     res.redirect("/register");
-  } else if (req.body.email === "") {
+  } else if (req.body.email === "" || req.body.password === "") {
     res.status(200);
+
     res.redirect("/register");
   } else {
     let randomId = generator();
@@ -128,14 +149,12 @@ app.post("/register", (req, res) => {
     users[randomId].id = randomId;
     users[randomId].email = req.body.email;
     users[randomId].password = hashedPassword;
-    console.log(users[randomId]);
     req.session.user_id = users[randomId];
-    console.log("block 3");
+
     res.redirect("/urls");
   }
-
-
 });
+
 
 //--- Feeds URLS from the database of the currently logged in user to main index page. ---
 app.get("/urls", (req, res) => {
@@ -145,6 +164,7 @@ app.get("/urls", (req, res) => {
       userUrls: urlsForUser(req.session.user_id.id),
       userData: req.session.user_id
     }
+
     res.render("urls_index", templateVars);
   }
   else {
@@ -152,9 +172,11 @@ app.get("/urls", (req, res) => {
       urls: urlDatabase.userID,
       userData: false
     }
+
   res.render("urls_index", templateVars);
   }
 });
+
 
 
 app.get("/urls/new", (req, res) => {
@@ -162,8 +184,10 @@ app.get("/urls/new", (req, res) => {
     let templateVars = {
       userData: req.session.user_id
     };
+
     res.render("urls_new", templateVars);
   } else {
+
     res.redirect("/login");
   }
 });
@@ -177,15 +201,18 @@ app.get("/urls/:id", (req, res) => {
       longURL: urlDatabase[req.params.id].url,
       userData: req.session.user_id
     };
+
     res.render("urls_show", templateVars);
   } else {
     let templateVars = {
       shortURL: req.params.id,
       userData: false
     }
+
     res.render("urls_show", templateVars);
   }
 });
+
 
 
 app.post("/urls/:id", (req, res) => {
@@ -206,6 +233,7 @@ app.post("/urls", (req, res) => {
 });
 
 
+
 app.post("/urls/:id/delete", (req, res) => {
   delete urlDatabase[req.params.id];
 
@@ -215,12 +243,9 @@ app.post("/urls/:id/delete", (req, res) => {
 
 //--- Redirects short URLs to full URLs ---
 app.get("/u/:shortURL", (req, res) => {
-  console.log("got correct route")
-  console.log(urlDatabase);
-  console.log(req.params);
   let longURL = urlDatabase[req.params.shortURL].url;
-  res.redirect(longURL);
 
+  res.redirect(longURL);
 });
 
 
