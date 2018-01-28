@@ -18,6 +18,7 @@ app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
 
+
 var urlDatabase = {
   "b2xVn2": {
     url: "http://www.lighthouselabs.ca",
@@ -42,6 +43,7 @@ const users = {
   }
 }
 
+
 function urlsForUser(id) {
   const matchList = {};
   for (let key in urlDatabase) {
@@ -60,6 +62,8 @@ function isMatch(userEntry, userListOdject, infoType) {
   }
   return false;
 }
+
+console.log(isMatch("nic.ehmayer92@gmail.com", users, "email"));
 
 function getUserId(email) {
   for (let key in users) {
@@ -82,8 +86,8 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   let id = getUserId(req.body.email);
 
+  //--- Checks for user matches in user database ---
   if (isMatch(req.body.email, users, "email") && bcrypt.compareSync(req.body.password, users[id].password))   {
-    //res.cookie("userData", users[id]);
     req.session.user_id = users[id];
     res.redirect("/urls");
   } else {
@@ -104,28 +108,35 @@ app.get("/register", (req, res) => {
 res.render("register");
 });
 
+//--- Adds new user info to database---
 app.post("/register", (req, res) => {
-  let randomId = generator();
-  const password = req.body.password;
-  const hashedPassword = bcrypt.hashSync(password, 10);
-  users[randomId] = {};
-  users[randomId].id = randomId;
-  users[randomId].email = req.body.email;
-  users[randomId].password = hashedPassword;
-  console.log(users[randomId]);
-  // if (isNameMatch(req.body.email, users)) {    // Fix these error throws..
-  //   throw err;
-  // } else if (req.body.email) {
-  //   throw err
-  // } else {
-  req.session.user_id = users[randomId];
-  res.redirect("/urls");
-  //}
+
+  if (isMatch(req.body.email, users, "email")) {    // Fix these error throws..
+    res.status(409);
+    console.log("block 1");
+    res.redirect("/register");
+  } else if (req.body.email === "") {
+    res.status(200);
+    console.log("block 2");
+    res.redirect("/register");
+  } else {
+    let randomId = generator();
+    const password = req.body.password;
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    users[randomId] = {};
+    users[randomId].id = randomId;
+    users[randomId].email = req.body.email;
+    users[randomId].password = hashedPassword;
+    console.log(users[randomId]);
+    req.session.user_id = users[randomId];
+    console.log("block 3");
+    res.redirect("/urls");
+  }
 
 
 });
 
-//--- Feeds URLS from database to main index page. ---
+//--- Feeds URLS from the database of the currently logged in user to main index page. ---
 app.get("/urls", (req, res) => {
   if(req.session.user_id) {
     let templateVars = {
@@ -174,7 +185,7 @@ app.post("/urls/:id", (req, res) => {
 });
 
 
-
+// Posts new short URL to main index page.
 app.post("/urls", (req, res) => {
   let randomString = generator();
   urlDatabase[randomString] = {};
