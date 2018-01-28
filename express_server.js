@@ -173,18 +173,19 @@ app.get("/urls/new", (req, res) => {
 
 //--- Feeds URL to URL_show selection page. ---
 app.get("/urls/:id", (req, res) => {
-  if (urlsForUser(req.params.id)) {
+  if (urlDatabase[req.params.id].userID === req.session.user_id.id) {
     let templateVars = {
       shortURL: req.params.id,
       longURL: urlDatabase[req.params.id].url,
       userData: req.session.user_id
     };
-  res.render("urls_show", templateVars);
+    res.render("urls_show", templateVars);
   } else {
     let templateVars = {
       shortURL: req.params.id,
+      userData: false
     }
-    res.render("URL_show", templateVars);
+    res.render("urls_show", templateVars);
   }
 });
 
